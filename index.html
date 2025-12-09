@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amanda Silveira - Engenharia Civil 2026</title>
+    <style>
+        /* Reset e configurações gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 60px 0;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        /* Cabeçalho */
+        header {
+            background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .logo-text h1 {
+            font-size: 3rem;
+            margin-bottom: 5px;
+            background: linear-gradient(45deg, #ffffff, #e6f7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .logo-text p {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        /* Seção da câmera */
+        .camera-section {
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .camera-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .camera-frame {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 9/16; /* Proporção vertical como Stories */
+            margin: 0 auto 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: #000;
+        }
+        
+        .camera-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            background: url('moldura.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 15px;
+        }
+        
+        #video, #canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        
+        .camera-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #0056b3, #007bff);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 86, 179, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .camera-message {
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        
+        /* Seção de contagem regressiva */
+        .countdown-section {
+            background: linear-gradient(135deg, #0056b3 0%, #003d82 100%);
+            color: white;
+        }
+        
+        .countdown-container {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .countdown-item {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px 15px;
+            min-width: 120px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .countdown-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .countdown-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        /* Seção de informações */
+        .info-section {
+            background-color: white;
+        }
+        
+        .info-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .info-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ddd, transparent);
+            margin: 30px 0;
+        }
+        
+        /* Seção PIX */
+        .pix-section {
+            background-color: #f8f9fa;
+        }
+        
+        .pix-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .pix-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .pix-key {
+            background: linear-gradient(135deg, #f1f8ff, #e3f2fd);
+            border: 2px dashed #0056b3;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0056b3;
+        }
+        
+        .btn-pix {
+            background: linear-gradient(45deg, #32bcad, #20a895);
+            color: white;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 15px rgba(50, 188, 173, 0.3);
+        }
+        
+        .btn-pix:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(50, 188, 173, 0.4);
+        }
+        
+        .pix-message {
+            font-style: italic;
+            color: #666;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+        
+        /* Rodapé */
+        footer {
+            background: linear-gradient(135deg, #222, #333);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .footer-text {
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .logo {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .logo-text h1 {
+                font-size: 2.2rem;
+            }
+            
+            .logo-text p {
+                font-size: 1.2rem;
+            }
+            
+            .countdown-item {
+                min-width: 100px;
+                padding: 15px 10px;
+            }
+            
+            .countdown-number {
+                font-size: 2rem;
+            }
+            
+            .camera-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+            
+            .camera-frame {
+                max-width: 400px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .camera-frame {
+                max-width: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <div class="logo-icon">🎓</div>
+                <div class="logo-text">
+                    <h1>AMANDA SILVEIRA</h1>
+                    <p>ENGENHARIA CIVIL • 2026</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Seção da Câmera -->
+    <section class="camera-section">
+        <div class="container">
+            <div class="camera-container">
+                <h2>Capture este momento</h2>
+                <div class="camera-frame">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <div class="camera-overlay"></div>
+                </div>
+                
+                <div class="camera-controls">
+                    <button id="switchCamera" class="btn btn-secondary">🔄 Girar Câmera</button>
+                    <button id="capture" class="btn btn-primary">📸 Tirar Foto</button>
+                    <button id="download" class="btn btn-primary" style="display: none;">⬇️ Baixar Foto</button>
+                </div>
+                
+                <p class="camera-message">Capture este momento com a Amanda 💛</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contagem Regressiva -->
+    <section class="countdown-section">
+        <div class="container">
+            <div class="countdown-container">
+                <h2>Contagem regressiva para o grande dia!</h2>
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="days">00</div>
+                        <div class="countdown-label">Dias</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="hours">00</div>
+                        <div class="countdown-label">Horas</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="minutes">00</div>
+                        <div class="countdown-label">Minutos</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="seconds">00</div>
+                        <div class="countdown-label">Segundos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Informações do Evento -->
+    <section class="info-section">
+        <div class="container">
+            <div class="info-container">
+                <h2>Detalhes da festa</h2>
+                <div class="info-card">
+                    <div class="info-item">
+                        <div class="info-icon">📅</div>
+                        <div class="info-text">
+                            <strong>Data:</strong> 09 de janeiro de 2026
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">📍</div>
+                        <div class="info-text">
+                            <strong>Local:</strong> R. Alfredo Emilio Allen, 221 - Morada do Vale II
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">⏰</div>
+                        <div class="info-text">
+                            <strong>Horário:</strong> 21h — Horário de Início
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção PIX -->
+    <section class="pix-section">
+        <div class="container">
+            <div class="pix-container">
+                <h2>Quer ajudar na realização deste sonho?</h2>
+                <div class="pix-card">
+                    <p>💰 Chave PIX:</p>
+                    <div class="pix-key">(51) 99351-6690</div>
+                    <button id="copyPix" class="btn btn-pix">Copiar chave PIX</button>
+                    <p class="pix-message">Cada gesto de carinho faz parte dessa conquista 💖</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">Site criado com carinho para a formanda Amanda Silveira 🎓</p>
+                <p class="footer-text">© 2025 — Todos os direitos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Elementos da câmera
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureBtn = document.getElementById('capture');
+        const switchCameraBtn = document.getElementById('switchCamera');
+        const downloadBtn = document.getElementById('download');
+        const context = canvas.getContext('2d');
+        
+        // Variáveis de controle da câmera
+        let currentStream = null;
+        let useFrontCamera = true;
+        let frameImage = null;
+        
+        // Carregar a imagem da moldura
+        function loadFrameImage() {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    frameImage = img;
+                    console.log("Moldura carregada com sucesso!", img.width, "x", img.height);
+                    resolve(img);
+                };
+                img.onerror = () => {
+                    console.log("Erro ao carregar moldura.png, criando moldura padrão...");
+                    // Criar uma moldura padrão se a imagem não carregar
+                    createDefaultFrame();
+                    resolve(frameImage);
+                };
+                // Tenta carregar a moldura
+                img.src = 'moldura.png?' + new Date().getTime();
+            });
+        }
+        
+        // Criar moldura padrão
+        function createDefaultFrame() {
+            const defaultFrame = document.createElement('canvas');
+            defaultFrame.width = 1080;
+            defaultFrame.height = 1920;
+            const ctx = defaultFrame.getContext('2d');
+            
+            // Fundo transparente
+            ctx.clearRect(0, 0, defaultFrame.width, defaultFrame.height);
+            
+            // Borda decorativa dourada
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 30;
+            ctx.strokeRect(15, 15, defaultFrame.width - 30, defaultFrame.height - 30);
+            
+            // Texto da formanda
+            ctx.fillStyle = 'rgba(0, 86, 179, 0.9)';
+            ctx.fillRect(0, defaultFrame.height - 200, defaultFrame.width, 200);
+            
+            ctx.font = 'bold 40px Arial';
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.fillText('AMANDA SILVEIRA', defaultFrame.width / 2, defaultFrame.height - 130);
+            ctx.font = '30px Arial';
+            ctx.fillText('Engenharia Civil 2026', defaultFrame.width / 2, defaultFrame.height - 80);
+            ctx.font = '25px Arial';
+            ctx.fillText('09/01/2026', defaultFrame.width / 2, defaultFrame.height - 30);
+            
+            frameImage = defaultFrame;
+        }
+        
+        // Inicializar a câmera sem zoom excessivo
+        function initCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                stopCamera();
+                
+                // Configurações mais suaves para evitar zoom
+                const constraints = {
+                    video: {
+                        facingMode: useFrontCamera ? 'user' : 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        aspectRatio: { ideal: 9/16 } // Forçar proporção vertical
+                    }
+                };
+                
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(stream => {
+                        currentStream = stream;
+                        video.srcObject = stream;
+                    })
+                    .catch(error => {
+                        console.error("Erro ao acessar a câmera: ", error);
+                        // Tenta com constraints mais simples se a ideal falhar
+                        const fallbackConstraints = {
+                            video: {
+                                facingMode: useFrontCamera ? 'user' : 'environment',
+                                aspectRatio: { ideal: 9/16 }
+                            }
+                        };
+                        navigator.mediaDevices.getUserMedia(fallbackConstraints)
+                            .then(stream => {
+                                currentStream = stream;
+                                video.srcObject = stream;
+                            })
+                            .catch(fallbackError => {
+                                console.error("Erro ao acessar a câmera (fallback): ", fallbackError);
+                                alert("Não foi possível acessar a câmera. Verifique as permissões.");
+                            });
+                    });
+            }
+        }
+        
+        // Parar a câmera atual
+        function stopCamera() {
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+        }
+        
+        // Desenhar a moldura na foto
+        function drawFrameOnCanvas() {
+            if (frameImage) {
+                // Desenhar a moldura cobrindo todo o canvas
+                context.drawImage(frameImage, 0, 0, canvas.width, canvas.height);
+            }
+        }
+        
+        // Tirar foto
+        captureBtn.addEventListener('click', async function() {
+            // Definir o canvas com proporção vertical fixa (Stories)
+            canvas.width = 1080;
+            canvas.height = 1920;
+            
+            // Calcular como desenhar o vídeo no canvas mantendo a proporção
+            const videoAspectRatio = video.videoWidth / video.videoHeight;
+            const canvasAspectRatio = canvas.width / canvas.height;
+            
+            let renderWidth, renderHeight, offsetX, offsetY;
+            
+            if (videoAspectRatio > canvasAspectRatio) {
+                // Vídeo é mais largo que o canvas
+                renderHeight = canvas.height;
+                renderWidth = video.videoWidth * (canvas.height / video.videoHeight);
+                offsetX = (canvas.width - renderWidth) / 2;
+                offsetY = 0;
+            } else {
+                // Vídeo é mais alto que o canvas
+                renderWidth = canvas.width;
+                renderHeight = video.videoHeight * (canvas.width / video.videoWidth);
+                offsetX = 0;
+                offsetY = (canvas.height - renderHeight) / 2;
+            }
+            
+            // Desenhar o frame atual do vídeo no canvas
+            context.drawImage(video, offsetX, offsetY, renderWidth, renderHeight);
+            
+            // Desenhar a moldura
+            drawFrameOnCanvas();
+            
+            // Mostrar o botão de download e esconder o de captura
+            captureBtn.style.display = 'none';
+            downloadBtn.style.display = 'flex';
+        });
+        
+        // Alternar entre câmeras
+        switchCameraBtn.addEventListener('click', function() {
+            useFrontCamera = !useFrontCamera;
+            initCamera();
+        });
+        
+        // Baixar a foto
+        downloadBtn.addEventListener('click', function() {
+            // Gerar nome único para o arquivo
+            const timestamp = new Date().getTime();
+            const randomNum = Math.floor(Math.random() * 10000);
+            const filename = `Formatura_Amanda_${timestamp}_${randomNum}.jpg`;
+            
+            // Criar link para download
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            
+            // Adicionar ao documento e clicar (download direto)
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Feedback visual
+            const originalText = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = '✓ Foto Baixada!';
+            downloadBtn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+            
+            // Voltar para o modo de captura após 2 segundos
+            setTimeout(() => {
+                downloadBtn.innerHTML = originalText;
+                downloadBtn.style.background = '';
+                downloadBtn.style.display = 'none';
+                captureBtn.style.display = 'flex';
+            }, 2000);
+        });
+        
+        // Contagem regressiva
+        function updateCountdown() {
+            const targetDate = new Date('2026-01-09T21:00:00').getTime();
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+            
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            } else {
+                document.querySelector('.countdown').innerHTML = '<div class="countdown-item"><div class="countdown-number">🎓</div><div class="countdown-label">O grande dia chegou!</div></div>';
+                clearInterval(countdownInterval);
+            }
+        }
+        
+        // Copiar chave PIX
+        document.getElementById('copyPix').addEventListener('click', function() {
+            const pixKey = '(51) 99351-6690';
+            
+            // Método moderno
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(pixKey)
+                    .then(() => {
+                        this.innerHTML = '✓ Chave copiada!';
+                        setTimeout(() => {
+                            this.innerHTML = 'Copiar chave PIX';
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        fallbackCopy(pixKey, this);
+                    });
+            } else {
+                fallbackCopy(pixKey, this);
+            }
+        });
+        
+        // Fallback para copiar
+        function fallbackCopy(text, button) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                button.innerHTML = '✓ Chave copiada!';
+                setTimeout(() => {
+                    button.innerHTML = 'Copiar chave PIX';
+                }, 2000);
+            } catch (err) {
+                console.error('Erro ao copiar: ', err);
+                alert('Não foi possível copiar a chave PIX. Copie manualmente: ' + text);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // Inicializar a página
+        window.addEventListener('load', async function() {
+            // Carregar a moldura primeiro
+            await loadFrameImage();
+            // Inicializar a câmera
+            initCamera();
+            // Iniciar contagem regressiva
+            updateCountdown();
+            const countdownInterval = setInterval(updateCountdown, 1000);
+        });
+        
+        // Prevenir problemas quando a página for fechada
+        window.addEventListener('beforeunload', function() {
+            stopCamera();
+        });
+    </script>
+</body>
+</html>
